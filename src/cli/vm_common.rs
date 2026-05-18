@@ -756,7 +756,8 @@ pub fn start_vm_named(name: &str) -> smolvm::Result<()> {
         println!("Machine '{}' running (PID: {})", name, pid.unwrap_or(0));
     }
 
-    // Persist running state after output — 1 write cycle (not on critical path)
+    // Persist running state. The 15s busy_timeout handles SQLite contention
+    // from concurrent starts — no application-level retry needed.
     let pid_start_time = pid.and_then(smolvm::process::process_start_time);
     if let Err(e) = db.update_vm(name, |r| {
         r.state = RecordState::Running;
