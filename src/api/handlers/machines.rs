@@ -1150,6 +1150,7 @@ mod tests {
             image: None,
             from: None,
             registry_ref: None,
+            registry_identity_token: None,
         }
     }
 
